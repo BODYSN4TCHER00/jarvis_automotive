@@ -1,0 +1,60 @@
+package com.example.jarvis.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Handyman
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.example.jarvis.components.ui.TopBar
+import com.example.jarvis.components.ui.SectionTitle
+import com.example.jarvis.components.ui.ListItem
+import com.example.jarvis.components.ui.ScreenContainer
+import com.example.jarvis.R
+import androidx.navigation.NavController
+
+@Composable
+fun JobsScreen(navController: NavController) {
+    val searchQuery = remember { mutableStateOf("") }
+    val jobs = listOf(
+        JobItem("Mantenimiento Preventivo En Planta De Producción", Icons.Filled.Build),
+        JobItem("Instalación De Tablero Eléctrico En Nave Industrial", Icons.Filled.Bolt),
+        JobItem("Sustitución De Luminarias LED En Almacén", Icons.Filled.Bolt),
+        JobItem("Reemplazo De Bombas Hidráulicas", Icons.Filled.Handyman),
+        JobItem("Alineación De Ejes Y Motores Industriales", Icons.Filled.Handyman)
+    )
+    ScreenContainer {
+        TopBar(
+            showBack = true,
+            onBack = { navController.popBackStack() },
+            searchQuery = searchQuery.value,
+            onSearchChange = { searchQuery.value = it },
+            logoResId = R.drawable.ic_logo,
+            onJobsClick = { navController.navigate("jobs") },
+            onToolsClick = { navController.navigate("tools") }
+        )
+        SectionTitle(text = "Trabajos")
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
+            items(jobs) { job ->
+                ListItem(
+                    icon = job.icon,
+                    text = job.title,
+                    onClick = { navController.navigate("jobTools/${job.title}") }
+                )
+            }
+        }
+    }
+}
+
+data class JobItem(val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
