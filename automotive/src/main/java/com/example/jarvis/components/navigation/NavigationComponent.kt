@@ -5,7 +5,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.jarvis.screens.HomeScreen
 import com.example.jarvis.screens.JobsScreen
 import com.example.jarvis.screens.ToolsScreen
 import com.example.jarvis.screens.JobToolsScreen
@@ -14,10 +13,8 @@ import com.example.jarvis.screens.JobToolsScreen
 fun NavigationComponent() {
     val navController: NavHostController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
-            HomeScreen(navController)
-        }
+    NavHost(navController = navController, startDestination = "jobs") {
+
         composable("jobs") {
             JobsScreen(navController)
         }
