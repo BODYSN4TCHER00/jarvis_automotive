@@ -1,5 +1,6 @@
 package com.example.jarvis.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,6 +19,13 @@ import com.example.jarvis.components.ui.*
 
 @Composable
 fun JobsScreen(navController: NavController) {
+    val isRootScreen = navController.previousBackStackEntry == null
+
+    // Bloquea el botón físico de regreso solo si es pantalla raíz
+    BackHandler(enabled = isRootScreen) {
+        // No hacer nada si es la primera pantalla
+    }
+
     val searchQuery = remember { mutableStateOf("") }
 
     val jobs = listOf(
@@ -30,7 +38,7 @@ fun JobsScreen(navController: NavController) {
 
     ScreenContainer {
         TopBar(
-            showBack = true,
+            showBack = !isRootScreen, // ✅ Oculta flecha si es pantalla raíz
             onBack = { navController.popBackStack() },
             searchQuery = searchQuery.value,
             onSearchChange = { searchQuery.value = it },
@@ -40,6 +48,7 @@ fun JobsScreen(navController: NavController) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+
         SectionTitle(text = "Trabajos")
 
         LazyColumn(
