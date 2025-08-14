@@ -9,6 +9,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev") // ✅ Repositorio de Compose Compiler
     }
 }
 dependencyResolutionManagement {
@@ -21,4 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "jarvis"
 include(":automotive")
- 
+include(":servidor")
