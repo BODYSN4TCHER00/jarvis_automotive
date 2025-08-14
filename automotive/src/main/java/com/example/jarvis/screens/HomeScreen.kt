@@ -52,6 +52,17 @@ fun HomeScreen(navController: NavController) {
             ) {
                 Text("Ir a Trabajos", fontSize = 22.sp)
             }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Button(
+                onClick = { navController.navigate("network") },
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(80.dp)
+            ) {
+                Text("Servidor WebSocket", fontSize = 22.sp)
+            }
         }
     }
 }

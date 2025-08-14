@@ -9,6 +9,7 @@ import com.example.jarvis.screens.HomeScreen
 import com.example.jarvis.screens.JobsScreen
 import com.example.jarvis.screens.ToolsScreen
 import com.example.jarvis.screens.JobToolsScreen
+import com.example.jarvis.screens.NetworkScreen
 
 @Composable
 fun NavigationComponent() {
@@ -27,6 +28,9 @@ fun NavigationComponent() {
         composable("jobTools/{jobName}") { backStackEntry ->
             val jobName = backStackEntry.arguments?.getString("jobName") ?: "Trabajo"
             JobToolsScreen(navController, jobName)
+        }
+        composable("network") {
+            NetworkScreen()
         }
     }
 }

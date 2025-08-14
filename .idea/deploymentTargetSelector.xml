@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="automotive">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-07-12T06:36:29.014481872Z">
+        <DropdownSelection timestamp="2025-08-14T04:20:51.625594269Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/home/diego/.android/avd/Automotive_1408p_landscape.avd" />
