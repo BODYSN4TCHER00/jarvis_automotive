@@ -18,7 +18,7 @@ Primero debes iniciar el servidor WebSocket:
 La IP del servidor **debe coincidir** con la red en la que estás ejecutando las apps. Dependiendo de dónde se ejecuten (emulador o dispositivo físico), debes ajustar lo siguiente en **ambas apps**:
 
 #### Cambiar IP en:
-- `MainActivity.kt`
+- `WebSocketClient.kt`
 - `network_security_config.xml`
 
 ####  Si usas emulador:
