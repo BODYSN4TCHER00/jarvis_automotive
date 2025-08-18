@@ -89,7 +89,7 @@ fun JobToolsScreen(navController: NavController, jobName: String) {
                 ) {
                     rowTools.forEach { tool ->
                         ToolCard(
-                            image = painterResource(id = R.drawable.ic_logo),
+                            imageUrl = "", // Sin imagen remota, usa la imagen por defecto
                             title = tool.title,
                             subtitle = tool.subtitle,
                             battery = tool.battery,

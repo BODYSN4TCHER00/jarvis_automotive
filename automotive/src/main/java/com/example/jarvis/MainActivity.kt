@@ -10,8 +10,16 @@ import com.example.jarvis.network.WebSocketClient
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Conectar al servidor al iniciar la app
-        WebSocketClient.connect("Automotive")
+
+        // Conectar WebSocket y asignar logs
+        WebSocketClient.onToolsUpdate = { tools ->
+            android.util.Log.d("WebSocket-UI", "Automotive recibió tools: $tools")
+        }
+        WebSocketClient.onJobsUpdate = { jobs ->
+            android.util.Log.d("WebSocket-UI", "Automotive recibió jobs: $jobs")
+        }
+        WebSocketClient.connect("automotive")
+
         setContent {
             JarvisAppTheme {
                 NavigationComponent()

@@ -22,10 +22,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.example.jarvis.R
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun ToolCard(
-    image: Painter,
+    imageUrl: String? = null,
     title: String,
     subtitle: String,
     battery: Int,
@@ -52,14 +55,27 @@ fun ToolCard(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (!imageUrl.isNullOrBlank()) {
+                        AsyncImage(
+                            model = imageUrl,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Fit,
+                            placeholder = painterResource(id = R.drawable.ic_logo),
+                            error = painterResource(id = R.drawable.ic_logo)
+                        )
+                    } else {
                     Image(
-                        painter = image,
+                            painter = painterResource(id = R.drawable.ic_logo),
                         contentDescription = null,
                         modifier = Modifier
                             .size(36.dp)
                             .clip(RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Fit
                     )
+                    }
                     Spacer(modifier = Modifier.width(8.dp))
                     Column {
                         Text(

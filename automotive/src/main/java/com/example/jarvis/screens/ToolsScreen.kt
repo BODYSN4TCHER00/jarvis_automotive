@@ -19,27 +19,48 @@ import com.example.jarvis.components.ui.ToolCard
 import com.example.jarvis.components.ui.ToolStatus
 import com.example.jarvis.R
 import androidx.navigation.NavController
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import coil.compose.AsyncImage
+import com.example.jarvis.data.models.Tool as ToolModel
+import com.example.jarvis.network.WebSocketClient
+import android.util.Log
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-// Datos de ejemplo para herramientas
-private data class Tool(
-    val imageRes: Int,
-    val title: String,
-    val subtitle: String,
-    val battery: Int,
-    val temperature: Int,
-    val status: ToolStatus
-)
+class ToolsViewModel : ViewModel() {
+    // Lista observable de tools
+    var tools = mutableStateListOf<ToolModel>()
+        private set
 
-private val toolsSample = listOf(
-    Tool(R.drawable.ic_logo, "Taladro Inalámbrico", "Bosch GSR 12V", 85, 32, ToolStatus.OK),
-    Tool(R.drawable.ic_logo, "Multímetro Digital", "Fluke 117", 60, 28, ToolStatus.WARNING),
-    Tool(R.drawable.ic_logo, "Cámara Térmica", "FLIR E4", 25, 65, ToolStatus.ERROR),
-    Tool(R.drawable.ic_logo, "Destornillador Eléctrico", "Makita DF012DSE", 90, 29, ToolStatus.OK)
-)
+    init {
+        Log.d("ToolsViewModel", "init: ViewModel inicializado")
+        // Escuchar actualizaciones en tiempo real
+        WebSocketClient.onToolsUpdate = { newTools ->
+            Log.d("ToolsViewModel", "Callback onToolsUpdate recibido: ${newTools.size} elementos: $newTools")
+            viewModelScope.launch(Dispatchers.Main) {
+                tools.clear()
+                tools.addAll(newTools)
+                Log.d("ToolsViewModel", "Lista interna actualizada: ${tools.size} elementos")
+            }
+        }
+    }
+}
 
 @Composable
 fun ToolsScreen(navController: NavController) {
+    Log.d("ToolsScreen", "Composable ToolsScreen inicializado")
+    val viewModel: ToolsViewModel = viewModel()
     val searchQuery = remember { mutableStateOf("") }
+    val tools = viewModel.tools
     ScreenContainer {
         TopBar(
             showBack = true,
@@ -51,29 +72,33 @@ fun ToolsScreen(navController: NavController) {
             onToolsClick = { navController.navigate("tools") }
         )
         SectionTitle(text = "Herramientas")
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
                 .padding(horizontal = 8.dp)
         ) {
-            // Mostrar las herramientas en filas de 2
-            toolsSample.chunked(2).forEach { rowTools ->
+            Log.d("ToolsScreen", "Renderizando tools: ${tools.size} elementos")
+            items(tools.chunked(2)) { rowTools ->
+                Log.d("ToolsScreen", "Renderizando fila con ${rowTools.size} elementos: $rowTools")
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     rowTools.forEach { tool ->
                         ToolCard(
-                            image = painterResource(id = tool.imageRes),
-                            title = tool.title,
-                            subtitle = tool.subtitle,
+                            imageUrl = tool.url,
+                            title = tool.name,
+                            subtitle = tool.model,
                             battery = tool.battery,
                             temperature = tool.temperature,
-                            status = tool.status,
+                            status = when (tool.availability) {
+                                "available" -> ToolStatus.OK
+                                "in_use" -> ToolStatus.WARNING
+                                else -> ToolStatus.ERROR
+                            },
                             modifier = Modifier.weight(1f)
                         )
                     }
-                    // Si la fila tiene solo 1 elemento, agregar un Spacer para alinear
                     if (rowTools.size == 1) {
                         Spacer(modifier = Modifier.weight(1f))
                     }

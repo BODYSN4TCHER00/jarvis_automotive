@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.TextUnit
 @Composable
 fun ListItem(
     icon: ImageVector,
-    text: String,
+    text: @Composable () -> Unit,
     onClick: () -> Unit = {},
     trailing: ImageVector? = Icons.Filled.ChevronRight,
     fontSize: TextUnit = 18.sp,
@@ -45,12 +45,9 @@ fun ListItem(
                 modifier = Modifier.size(iconSize)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = text,
-                fontSize = fontSize,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.weight(1f)
-            )
+            Box(modifier = Modifier.weight(1f)) {
+                text()
+            }
             if (trailing != null) {
                 Icon(
                     imageVector = trailing,
